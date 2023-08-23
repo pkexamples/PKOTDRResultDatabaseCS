@@ -189,9 +189,9 @@ namespace PhotonKinetics.PersistOtdrToDb
 										be = eta.get_BufferEvent((NTOPLEVENTTABLELib.NTOPL_FIBER_END)1);
 										sigResult.EndEvent = new SignatureEvent()
 										{
-											Location = FutLoc(be.Loc, buffEvtLocS, testWave.GroupIndex),
-											Loss = be.Loss.Value,
-											Reflectance = be.Refl.Value
+											Location = FutLoc(ee.Loc, buffEvtLocS, testWave.GroupIndex),
+											Loss = ee.Loss.Value,
+											Reflectance = ee.Refl.Value
 										};
 									}
 
@@ -206,6 +206,8 @@ namespace PhotonKinetics.PersistOtdrToDb
 										sigResult.MaxLossEvent.Location = FutLoc(evt.Loc, buffEvtLocS, testWave.GroupIndex);
 										sigResult.MaxLossEvent.Loss = evtLoss.Value;
 										sigResult.MaxLossEvent.Reflectance = evtRefl.Value;
+									}
+										var evtRefl = evt.Refl;
 									}
 									// get min loss event
 									if (eta.MinLossIndex > -1)
