@@ -421,6 +421,7 @@ namespace PhotonKinetics.ResultDatabase
 		public LsaDeviation MaxLsaDeviation { get; set; } = new LsaDeviation();
 		public double? Length { get; set; }
 		public double? Attenuation { get; set; }
+		public List<SignatureEvent> SignatureEvents { get; set; } = new List<SignatureEvent>();
 
 		/// <summary>
 		/// Specifier for signature direction
@@ -464,6 +465,8 @@ namespace PhotonKinetics.ResultDatabase
 	/// </summary>
 	public class SignatureEvent
 	{
+		[Key]
+		public long SignatureEventId { get; set; }
 		public double? Location { get; set; }
 		public double? Loss { get; set; }
 		public double? Reflectance { get; set; }

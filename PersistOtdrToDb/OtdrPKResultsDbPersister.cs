@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GNOTDRSIGNATURELib;
+using NTOPLOTDRANALYSISLib;
+using PhotonKinetics.ResultDatabase;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using GNOTDRSIGNATURELib;
-using NTOPLOTDRANALYSISLib;
-using PhotonKinetics.ResultDatabase;
 
 namespace PhotonKinetics.PersistOtdrToDb
 {
@@ -41,11 +41,9 @@ namespace PhotonKinetics.PersistOtdrToDb
 				throw new ApplicationException(errMsg);
 			}
 
-			// requires late binding; don't want to add a reference to entire Front Panel
-			// could remove references to all PK COM types & declare those objects as Object
-			// and use late binding for all of the COM objects
-			Type gnFP2Type = Type.GetType("GN8000FrontPanel2.clsRemote");
-			dynamic remote = Activator.CreateInstance(gnFP2Type);
+			// Create a clsRemote instance w/o needing to add a reference to GN8000FrontPanel2
+			Type clsRemoteType = Type.GetTypeFromProgID("GN8000FrontPanel2.clsRemote");
+			dynamic remote = Activator.CreateInstance(clsRemoteType);
 			IOTDRAnalysis analysis = remote.Analysis as IOTDRAnalysis;
 			if (analysis is null || !analysis.ResultsValid)
 			{
@@ -189,9 +187,9 @@ namespace PhotonKinetics.PersistOtdrToDb
 										be = eta.get_BufferEvent((NTOPLEVENTTABLELib.NTOPL_FIBER_END)1);
 										sigResult.EndEvent = new SignatureEvent()
 										{
-											Location = FutLoc(ee.Loc, buffEvtLocS, testWave.GroupIndex),
-											Loss = ee.Loss.Value,
-											Reflectance = ee.Refl.Value
+											Location = FutLoc(be.Loc, buffEvtLocS, testWave.GroupIndex),
+											Loss = be.Loss.Value,
+											Reflectance = be.Refl.Value
 										};
 									}
 
@@ -207,8 +205,7 @@ namespace PhotonKinetics.PersistOtdrToDb
 										sigResult.MaxLossEvent.Loss = evtLoss.Value;
 										sigResult.MaxLossEvent.Reflectance = evtRefl.Value;
 									}
-										var evtRefl = evt.Refl;
-									}
+
 									// get min loss event
 									if (eta.MinLossIndex > -1)
 									{
@@ -220,6 +217,7 @@ namespace PhotonKinetics.PersistOtdrToDb
 										sigResult.MinLossEvent.Loss = evtLoss.Value;
 										sigResult.MinLossEvent.Reflectance = evtRefl.Value;
 									}
+
 									// get max reflectance event
 									if (eta.MaxReflIndex > -1)
 									{
@@ -230,6 +228,17 @@ namespace PhotonKinetics.PersistOtdrToDb
 										sigResult.MaxReflectanceEvent.Location = FutLoc(evt.Loc, buffEvtLocS, testWave.GroupIndex);
 										sigResult.MaxReflectanceEvent.Loss = evtLoss.Value;
 										sigResult.MaxReflectanceEvent.Reflectance = evtRefl.Value;
+									}
+
+									// get all events
+									NTOPLEVENTTABLELib.BufferedEventTable bet = eta.BufferedEventTable;
+									foreach (NTOPLEVENTTABLELib.FiberEvent evt in bet)
+									{
+										var evtLoss = evt.Loss;
+										var evtRefl = evt.Refl;
+										double loc = FutLoc(evt.Loc, eta.get_BufferEvent(0).Loc, testWave.GroupIndex);
+										var sigEvt = new SignatureEvent() { Location = loc, Loss = evtLoss, Reflectance = evtRefl };
+										sigResult.SignatureEvents.Add(sigEvt);
 									}
 
 									if (testWave.get_SlidingWindowResultsValid((NTOPL_FIBER_DIR)dir))
