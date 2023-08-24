@@ -422,6 +422,8 @@ namespace PhotonKinetics.ResultDatabase
         public double? Length { get; set; }
         public double? Attenuation { get; set; }
         public List<SignatureEvent> SignatureEvents { get; set; } = new List<SignatureEvent>();
+        public List<WindowAttenuation> WindowAttenuations { get; set; } = new List<WindowAttenuation>();
+        public List<WindowUniformity> WindowUniformities { get; set; } = new List<WindowUniformity>();
 
         /// <summary>
         /// Specifier for signature direction
@@ -477,6 +479,8 @@ namespace PhotonKinetics.ResultDatabase
     /// </summary>
     public class WindowAttenuation
     {
+        [Key]
+        public long WindowAttenuationId { get; set; }
         public double? Location { get; set; }
         public double? Attenuation { get; set; }
     }
@@ -486,6 +490,8 @@ namespace PhotonKinetics.ResultDatabase
     /// </summary>
     public class WindowUniformity
     {
+        [Key]
+        public long WindowUniformityId { get; set; }
         public double? Location { get; set; }
         public double? Uniformity { get; set; }
     }

@@ -260,6 +260,20 @@ namespace PhotonKinetics.PersistOtdrToDb
                                         // get min sw unif
                                         sigResult.MinWindowUnif.Location = FutLoc(swaUnifXYData.yMinLoc, buffEvtLocS, testWave.GroupIndex);
                                         sigResult.MinWindowUnif.Uniformity = LossPerKm(swaUnifXYData.yMin, testWave.GroupIndex);
+
+                                        // get all sw atten and unif
+                                        double refSlope = swa.ReferenceAtten;
+                                        double winHalfWidth = swa.Params.WindowWidth / 2;
+                                        for (int i = 0; i < swaAttenXYData.N; i++)
+                                        {
+                                            // report window locations like 8000 FP: using the midpoint of the window
+                                            double locKm = FutLoc(swa.SlidingWindow[i].Start + winHalfWidth, buffEvtLocS, testWave.GroupIndex);
+                                            double slope = swa.SlidingWindow[i].Slope;
+                                            double atten = LossPerKm(-slope, testWave.GroupIndex);
+                                            double unif = LossPerKm(-refSlope - slope, testWave.GroupIndex);
+                                            sigResult.WindowAttenuations.Add(new WindowAttenuation { Location = locKm, Attenuation = atten });
+                                            sigResult.WindowUniformities.Add(new WindowUniformity { Location = locKm, Uniformity = unif });
+                                        }
                                     }
 
                                     if (testWave.get_LSAResultsValid((NTOPL_FIBER_DIR)dir))

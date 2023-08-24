@@ -97,6 +97,10 @@
     <Compile Include="Migrations\202112022354297_Initial.Designer.cs">
       <DependentUpon>202112022354297_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308241602234_SlidingWindowsData.cs" />
+    <Compile Include="Migrations\202308241602234_SlidingWindowsData.designer.cs">
+      <DependentUpon>202308241602234_SlidingWindowsData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -109,6 +113,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202112022354297_Initial.resx">
       <DependentUpon>202112022354297_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308241602234_SlidingWindowsData.resx">
+      <DependentUpon>202308241602234_SlidingWindowsData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

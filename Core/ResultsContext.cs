@@ -22,6 +22,8 @@ namespace PhotonKinetics.ResultDatabase
         public DbSet<AttenuationWaveResult> AttenWaveResults { get; set; }
         public DbSet<LengthResult> LengthResults { get; set; }
         public DbSet<SignatureEvent> SignatureEvents { get; set; }
+        public DbSet<WindowAttenuation> WindowAttenuations { get; set; }
+        public DbSet<WindowUniformity> WindowUniformities { get; set; }
 
         /// <summary>
         /// This constructor is used by non-PKSL clients.  To change the database connection string, add a Connection String section to the
